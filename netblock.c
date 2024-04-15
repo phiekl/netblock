@@ -33,21 +33,27 @@ int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen) {
             port4);
     return -1;
   }
+  #ifdef AF_NETLINK
   case AF_NETLINK:
     fprintf(stderr, "*** BLOCKED: connect(family=AF_NETLINK) ***\n");
     return -1;
+  #endif
   case AF_UNIX: {
     struct sockaddr_un *sun = (struct sockaddr_un *)addr;
     fprintf(stderr, "*** BLOCKED: connect(family=AF_UNIX, addr=%s) ***\n",
             sun->sun_path);
     return -1;
   }
+  #ifdef AF_UNSPEC
   case AF_UNSPEC:
     fprintf(stderr, "*** BLOCKED: connect(family=AF_UNSPEC) ***\n");
     return -1;
+  #endif
+  #ifdef AF_XDP
   case AF_XDP:
     fprintf(stderr, "*** BLOCKED: connect(family=AF_XDP) ***\n");
     return -1;
+  #endif
   default:
     fprintf(stderr, "*** BLOCKED: connect(family=UNKNOWN) ***\n");
     return -1;
