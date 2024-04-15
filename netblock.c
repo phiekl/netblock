@@ -13,7 +13,7 @@
 
 int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen) {
   switch (addr->sa_family) {
-  case AF_INET6:
+  case AF_INET6: {
     char ip6[INET6_ADDRSTRLEN];
     struct sockaddr_in6 *sin6 = (struct sockaddr_in6 *)addr;
     inet_ntop(AF_INET6, &sin6->sin6_addr, ip6, INET6_ADDRSTRLEN);
@@ -22,7 +22,8 @@ int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen) {
             "*** BLOCKED: connect(family=AF_INET6, addr=%s, port=%d) ***\n",
             ip6, port6);
     return -1;
-  case AF_INET:
+  }
+  case AF_INET: {
     struct sockaddr_in *sin = (struct sockaddr_in *)addr;
     char ip4[INET_ADDRSTRLEN];
     inet_ntop(AF_INET, &(sin->sin_addr), ip4, INET_ADDRSTRLEN);
@@ -31,14 +32,16 @@ int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen) {
             "*** BLOCKED: connect(family=AF_INET, addr=%s, port=%d) ***\n", ip4,
             port4);
     return -1;
+  }
   case AF_NETLINK:
     fprintf(stderr, "*** BLOCKED: connect(family=AF_NETLINK) ***\n");
     return -1;
-  case AF_UNIX:
+  case AF_UNIX: {
     struct sockaddr_un *sun = (struct sockaddr_un *)addr;
     fprintf(stderr, "*** BLOCKED: connect(family=AF_UNIX, addr=%s) ***\n",
             sun->sun_path);
     return -1;
+  }
   case AF_UNSPEC:
     fprintf(stderr, "*** BLOCKED: connect(family=AF_UNSPEC) ***\n");
     return -1;
